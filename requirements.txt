@@ -1,0 +1,20 @@
+openai
+pypdf
+flask
+python-dotenv
+requests
+langchain
+pinecone-client
+logging
+os
+nltk
+huggingface_hub
+transformers
+sentence-transformers
+streamlit
+#-e . # It's a indication that I have setup.py file in the root directory of the project.
+
+# tiktoken (recommended)
+# sentence-transformers (optional, alternative embeddings)
+# transformers (optional, alternative embeddings)
+# pytest (for testing)
