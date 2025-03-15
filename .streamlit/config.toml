@@ -1,0 +1,15 @@
+[theme]
+# Choose a base theme. Options: "light" or "dark". "Dark" is a built-in option.
+base = "dark"
+
+# Specify the background color of the main content area.
+backgroundColor = "#000000"
+
+# Specify the secondary background color (used in elements like cards or containers).
+secondaryBackgroundColor = "#262730"
+
+# Set the primary color used for interactive elements like buttons.
+primaryColor = "#1E90FF"
+
+# Define the text color.
+textColor = "#FFFFFF"

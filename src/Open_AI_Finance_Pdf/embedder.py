@@ -11,40 +11,34 @@ def generate_sentence_transformer_embeddings(texts, model_name="all-MiniLM-L6-v2
         print(f"Error generating embeddings: {e}")
         return None
 
-def save_embeddings(embeddings, file_path):
+def save_embeddings(embeddings, output_path = r"C:\End_to_End_Finance_ChatBot\data\embeddings.pkl"):
     """Saves embeddings to a file."""
     try:
-        with open(file_path, "wb") as f:
+        with open(output_path, "wb") as f:
             pickle.dump(embeddings, f)
         return True
     except Exception as e:
         print(f"Error saving embeddings: {e}")
         return False
 
+'''
+# For Example
 if __name__ == "__main__":
-    from pdf_loader import load_pdf_with_pypdf2
     from text_splitter import split_text_with_nltk
 
-    pdf_path = r"C:\End_to_End_Finance_ChatBot\data\ICICI-direct-FAQ.pdf"
-    output_path = r"C:\End_to_End_Finance_ChatBot\data\Embeddings\embeddings.pkl"
+    texts = split_text_with_nltk() #Get the texts.
 
-    try:
-        text = load_pdf_with_pypdf2(pdf_path)
-        if text:
-            splitted_texts = split_text_with_nltk(text)
-            if splitted_texts:
-                vectors = generate_sentence_transformer_embeddings(splitted_texts)
-                if vectors is not None:
-                    if save_embeddings(vectors, output_path):
-                        print("Sentence Transformer embeddings generated and saved.")
-                    else:
-                        print("Embeddings generation successful, but saving failed.")
-                else:
-                    print("Embeddings generation failed.")
+    if texts is None:
+        print("Failed to load texts.")
+    else:
+        embeddings = generate_sentence_transformer_embeddings(texts) #generate the embeddings.
+
+        if embeddings is not None:
+            if save_embeddings(embeddings):
+                print(f"Embeddings saved")
             else:
-                print("Text splitting failed.")
-        else:
-            print("PDF loading failed.")
+                print("Failed to save embeddings.")
 
-    except Exception as outer_e:
-        print(f"An outer error occurred: {outer_e}")
+        else:
+            print("Failed to generate embeddings.")'
+            '''

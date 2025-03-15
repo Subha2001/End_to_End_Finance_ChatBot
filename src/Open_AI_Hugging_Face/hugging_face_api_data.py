@@ -2,10 +2,10 @@ import os
 import requests
 
 def get_hf_api_response(prompt: str,
-                        max_new_tokens: int,
-                        temperature: float,
+                        max_new_tokens: int = 250,
+                        temperature: float = 0.8,
                         repo_id: str = "ai1-test/finance-chatbot-flan-t5-large",
-                        hf_api_token: str = "") -> str:
+                        hf_api_token: str = os.getenv("HUGGINGFACE_API_KEY", "")) -> str:
     """
     Generates a response by sending the prompt directly to the Hugging Face Inference API.
     
@@ -31,12 +31,11 @@ def get_hf_api_response(prompt: str,
         payload = {
             "inputs": prompt,
             "parameters": {
-                "max_new_tokens": 250,  # Increase token limit for longer responses
-                "temperature": 0.8
-                }
+                "max_new_tokens": max_new_tokens,
+                "temperature": temperature
             }
+        }
         
-
         # Execute the POST request
         response = requests.post(api_url, headers=headers, json=payload)
 
@@ -55,16 +54,15 @@ def get_hf_api_response(prompt: str,
         print("Error while generating response:", e)
         return "Error generating response."
 
+
+'''
+# For Example
 if __name__ == "__main__":
-    # Replace with your actual Hugging Face API token.
-    hf_api_token = "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"
     
-    # Define the model repository identifier and the prompt.
-    max_new_tokens = 250
-    temperature = 0.8
-    repo_id = "ai1-test/finance-chatbot-flan-t5-large"
+    # Define the prompt.
     prompt = "What is the valuation of Indian Share market"
     
     # Generate the response and print it.
-    generated_response = get_hf_api_response(prompt, max_new_tokens, temperature, repo_id, hf_api_token)
+    generated_response = get_hf_api_response(prompt)
     print("Generated Response:", generated_response)
+    '''

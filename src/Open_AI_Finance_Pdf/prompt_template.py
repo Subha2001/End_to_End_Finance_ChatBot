@@ -1,7 +1,3 @@
-from langchain.prompts import PromptTemplate
-
-# prompt_template.py
-
 def get_finance_prompt(query: str) -> str:
     """
     Generates a prompt for finance-related queries.
@@ -24,8 +20,8 @@ def get_finance_prompt(query: str) -> str:
     """
     return prompt
 
-
-# Example Usage (optional):
+'''
+# For Example:
 if __name__ == "__main__":
     # Example
     query1 = "What is ESOP?"
@@ -33,3 +29,4 @@ if __name__ == "__main__":
     print("Example 1: General Finance Prompt")
     print(prompt1)
     print("-" * 40)
+    '''

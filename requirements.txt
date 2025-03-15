@@ -12,6 +12,7 @@ huggingface_hub
 transformers
 sentence-transformers
 streamlit
+gTTS
 #-e . # It's a indication that I have setup.py file in the root directory of the project.
 
 # tiktoken (recommended)

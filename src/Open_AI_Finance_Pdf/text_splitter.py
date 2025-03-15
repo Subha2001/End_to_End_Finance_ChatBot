@@ -1,8 +1,11 @@
 import nltk
-from PyPDF2 import PdfReader
+from pdf_loader import load_pdf_with_pypdf2
 
-def split_text_with_nltk(text, chunk_size=1000, chunk_overlap=200):
-    """Splits text into chunks using nltk, handling potential errors."""
+def split_text_with_nltk(chunk_size=1000, chunk_overlap=200):
+    """Splits text from PDF into chunks using nltk, handling potential errors."""
+    text = load_pdf_with_pypdf2() #load the text from the pdf.
+    if text is None:
+        return [] #return empty list if the text is none.
     try:
         sentences = nltk.sent_tokenize(text)
         chunks = []
@@ -22,25 +25,15 @@ def split_text_with_nltk(text, chunk_size=1000, chunk_overlap=200):
         print(f"An error occurred while splitting text: {e}")
         return []
 
+'''
+# For Example
 if __name__ == "__main__":
-    pdf_path = "C:\End_to_End_Finance_ChatBot\data\ICICI-direct-FAQ.pdf"  # Replace with the path to your PDF file
-    try:
-        nltk.download('punkt')  # Download the sentence tokenizer model
-        with open(pdf_path, 'rb') as file: #open the file in read binary mode.
-            reader = PdfReader(file)
-            pdf_text = ""
-            for page in reader.pages:
-                pdf_text += page.extract_text() or "" #extract_text can return none.
-
-        if pdf_text:
-            chunks = split_text_with_nltk(pdf_text)
-            if chunks:
-                print(f"Split into {len(chunks)} chunks.")
-                print(chunks[0][:100])
-            else:
-                print("Text splitting failed.")
-        else:
-            print("PDF loading failed.")
-
-    except Exception as outer_e:
-        print(f"An outer error occurred: {outer_e}")
+    chunks = split_text_with_nltk()
+    
+    if chunks:
+        print(f"Number of chunks: {len(chunks)}")
+        for i, chunk in enumerate(chunks[:5]): #print the first 5 chunks. [We are getting 504 chunks]
+            print(f"Chunk {i+1}:\n{chunk}\n{'-'*20}")
+    else:
+        print("Text splitting failed.")'
+        '''

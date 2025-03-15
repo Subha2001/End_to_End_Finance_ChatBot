@@ -1,21 +1,21 @@
-import os
 import faiss
 import numpy as np
-import nltk
-import embedder
-import pdf_loader
-import text_splitter
-from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+from text_splitter import split_text_with_nltk
+from embedder import generate_sentence_transformer_embeddings
 
 load_dotenv()
 
-def init_faiss_vector_store(texts, embeddings):
+def init_faiss_vector_store():
     """
-    Initializes FAISS and creates a vector store from the provided texts and embeddings.
+    Initializes FAISS and creates a vector store from the fixed texts and embeddings.
     """
     try:
+        texts = split_text_with_nltk() #Get the texts.
+        embeddings = generate_sentence_transformer_embeddings([texts]) # Get the embeddings.
+        if texts is None or embeddings is None:
+            return None #return none if either is none.
+
         # Convert embeddings to a format suitable for FAISS
         embeddings_array = np.array(embeddings).astype('float32')
 
@@ -31,51 +31,16 @@ def init_faiss_vector_store(texts, embeddings):
         print(f"Error creating FAISS vector store: {e}")
         return None
 
-''''def retrieve_query(vector_store, query, k=2):
-    """
-    Retrieves the top 'k' documents from the vector store based on cosine similarity.
-    """
-    try:
-        embeddings = generate_sentence_transformer_embeddings([query])
-        D, I = vector_store['index'].search(np.array(embeddings).astype('float32'), k)
-        matching_results = [vector_store['texts'][i] for i in I[0]]
-        return matching_results
-    except Exception as e:
-        print(f"Error retrieving query results: {e}")
-        return None'''
-
+'''
+# For Example
 if __name__ == "__main__":
-    pdf_path = r"C:\End_to_End_Finance_ChatBot\data\ICICI-direct-FAQ.pdf"
-    output_path = r"C:\End_to_End_Finance_ChatBot\data\Embeddings\embeddings.pkl"
+    
+    vector_store = init_faiss_vector_store()
 
-    try:
-        text = pdf_loader.load_pdf_with_pypdf2(pdf_path)
-
-        if text:
-            splitted_texts = text_splitter.split_text_with_nltk(text)
-
-            if splitted_texts:
-                vectors = embedder.generate_sentence_transformer_embeddings(splitted_texts)
-
-                if vectors is not None:
-                    if embedder.save_embeddings(vectors, output_path):
-                        print("Sentence Transformer embeddings generated and saved.")
-                    else:
-                        print("Embeddings generation successful, but saving failed.")
-
-                    # Connect to existing FAISS vector store
-                    vector_store = init_faiss_vector_store(splitted_texts, vectors)
-
-                    if vector_store:
-                        print("Connected to existing FAISS vector store and populated.")
-                    else:
-                        print("Failed to connect to FAISS vector store.")
-                else:
-                    print("Embeddings generation failed.")
-            else:
-                print("Text splitting failed.")
-        else:
-            print("PDF loading failed.")
-
-    except Exception as outer_e:
-        print(f"An outer error occurred: {outer_e}")
+    if vector_store:
+        print("FAISS vector store initialized successfully.")
+        print(f"Number of texts: {len(vector_store['texts'])}") #Number of texts: 504
+        print(f"Index Dimensions: {vector_store['index'].d}") #Index Dimensions: 384
+    else:
+        print("Failed to initialize FAISS vector store.")
+'''

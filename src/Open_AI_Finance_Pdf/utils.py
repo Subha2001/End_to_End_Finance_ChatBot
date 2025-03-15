@@ -1,3 +1,5 @@
+# Description: This file contains utility functions for the project.
+# Currently, it contains a function to load environment variables from a .env file. [For sample purpose, not required right now]
 import os
 from dotenv import load_dotenv
 
