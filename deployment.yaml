@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cognifin-v1 # Corrected Deployment name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cognifin-app
+  template:
+    metadata:
+      labels:
+        app: cognifin-app
+    spec:
+      containers:
+      - name: cognifin-app
+        image: cognifin_v1
+        imagePullPolicy: Never  # Tell Kubernetes not to pull from a registry
+        # image: vikash95/kubernetes-test-app:latest
+        resources:
+           limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 5000 # Streamlit application is listening on port 5000, as shown in the application logs and your deployment yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cognifin-service # Corrected service name
+spec:
+  selector:
+    app: cognifin-app
+  ports:
+  # In this case, it will only accept traffic on port 5000 because in DockerFile we have exposed port 5000
+  - port: 5000 # This is the port that the Service itself listens on. It's the port that you access when you want to reach your application
+    targetPort: 5000 # This is the port that the Service forwards traffic to inside the pod. It must match the containerPort of your application

@@ -22,9 +22,12 @@ except ImportError as e:
     st.error(f"Error importing chatbot module: {e}")
 
 try:
-    from src.Open_AI_Hugging_Face import hf_chatbot_speech_to_text  # from src/Open_AI_Hugging_Face/hf_chatbot_speech_to_text.py
+    from src.Open_AI_Hugging_Face import hf_chatbot_text_to_speech  # from src/Open_AI_Hugging_Face/hf_chatbot_speech_to_text.py
 except ImportError as e:
     st.error(f"Error importing Hugging Face speech_to_text module: {e}")
+
+# --- Fixed Title ---
+st.title("Chatbot Application")
 
 # --- Initialize conversation history ---
 if "chat_history" not in st.session_state:
@@ -35,9 +38,9 @@ def render_chat_history():
     chat_content = ""
     for msg in st.session_state.chat_history:
         if msg["role"] == "user":
-            chat_content += f"**User:** {msg['content']}  \n\n"
+            chat_content += f"**You:** {msg['content']}  \n\n"
         else:
-            chat_content += f"**Assistant:** {msg['content']}  \n\n"
+            chat_content += f"**Bot:** {msg['content']}  \n\n"
     return chat_content
 
 # Create a placeholder for the chat messages. This placeholder will be updated after each message.
@@ -47,9 +50,6 @@ chat_placeholder.markdown(render_chat_history())
 # --- Begin the Streamlit App ---
 st.sidebar.title("Select Application")
 app_choice = st.sidebar.selectbox("Choose an option", ["App FAQ", "Fin Bot"])
-
-# --- Fixed Title ---
-st.title("Chatbot Application")
 
 # --- Chat interface for App FAQ ---
 if app_choice == "App FAQ":
@@ -91,7 +91,7 @@ elif app_choice == "Fin Bot":
             # Append user's query to the conversation history
             st.session_state.chat_history.append({"role": "user", "content": user_query})
             try:
-                response = hf_chatbot_speech_to_text.generate_chat_response_with_tts(user_query)
+                response = hf_chatbot_text_to_speech.generate_chat_response_with_tts(user_query)
                 # If response is a tuple, extract only the text part.
                 if isinstance(response, tuple):
                     response_text = response[0]

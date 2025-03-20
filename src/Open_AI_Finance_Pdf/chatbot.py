@@ -67,5 +67,5 @@ if __name__ == "__main__":
     response_text, audio_file = create_chat_response(user_query)
     print("Response text:", response_text)
     if audio_file:
-        print("Audio file generated at:", audio_file)'
+        print("Audio file generated at:", audio_file)
         '''

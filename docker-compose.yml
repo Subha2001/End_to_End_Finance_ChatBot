@@ -1,0 +1,38 @@
+# Not required right now. Since, our app will run only in web right now
+
+
+#version: '3.8'
+
+#services:
+
+# The web service
+#  financechat:
+#    image: subha2001/financechat:latest
+#    ports:
+#      - "5000:5000"          # Maps container port 5000 to host port 5000
+#    environment:
+#      - PYTHONUNBUFFERED=1    # Ensures Python logs are sent directly to the terminal without buffering.
+      # You can add more environment variables here, e.g.:
+      # - DB_HOST=db
+      # - DB_USER=finance_user
+      # - DB_PASSWORD=finance_pass
+      # - DB_NAME=finance_db
+#    depends_on:
+#      - db                  # Ensures the Postgres container starts before your app
+#    restart: unless-stopped
+
+# The database service
+#  db:
+#    image: postgres:13
+#    ports:
+#      - "5432:5432"         # Exposes the Postgres port if external connection is needed.
+#    environment:
+#      - POSTGRES_DB=finance_db
+#      - POSTGRES_USER=finance_user
+#      - POSTGRES_PASSWORD=finance_pass
+#    volumes:
+#      - db_data:/var/lib/postgresql/data  # Persists database data across container restarts
+#    restart: unless-stopped
+
+#volumes:
+#  db_data:

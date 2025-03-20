@@ -1,11 +1,30 @@
 import nltk
+from nltk.tokenize import PunktSentenceTokenizer
 from pdf_loader import load_pdf_with_pypdf2
 
 def split_text_with_nltk(chunk_size=1000, chunk_overlap=200):
     """Splits text from PDF into chunks using nltk, handling potential errors."""
-    text = load_pdf_with_pypdf2() #load the text from the pdf.
+    # Ensure punkt tokenizer is downloaded
+    try:
+        nltk.data.find('tokenizers/punkt_tab')
+    except LookupError:
+        print("Downloading NLTK punkt_tab resource...")
+        nltk.download('punkt_tab')
+
+    try:
+        nltk.download('punkt')
+        print("Download of 'punkt' completed successfully!")
+        
+        tokenizer = PunktSentenceTokenizer()
+        print("'punkt_tab' resource is now generated and ready!")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    text = load_pdf_with_pypdf2()  # Load the text from the PDF
     if text is None:
-        return [] #return empty list if the text is none.
+        return []  # Return an empty list if the text is None
+
     try:
         sentences = nltk.sent_tokenize(text)
         chunks = []
@@ -15,7 +34,7 @@ def split_text_with_nltk(chunk_size=1000, chunk_overlap=200):
                 current_chunk += sentence + " "
             else:
                 chunks.append(current_chunk.strip())
-                #add some overlap
+                # Add some overlap
                 current_chunk = current_chunk[-chunk_overlap:] + sentence + " "
 
         if current_chunk:
