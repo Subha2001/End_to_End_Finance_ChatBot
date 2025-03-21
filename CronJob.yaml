@@ -1,0 +1,33 @@
+# To clear media files older than 7 days [For future reference: Not required right now]
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup-media-files
+spec:
+  # Run daily at 2:00 AM (UTC); adjust the cron schedule as needed.
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: cleanup
+              image: busybox
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Starting cleanup of /app/media..."
+                  # Delete files older than 7 days; adjust -mtime value as needed.
+                  find /app/media -type f -mtime +7 -exec rm -f {} \;
+                  # Alternatively, to clear everything uncomment the next line:
+                  # rm -rf /app/media/*
+                  echo "Cleanup complete."
+              volumeMounts:
+                - name: media-storage
+                  mountPath: /app/media
+          volumes:
+            - name: media-storage
+              persistentVolumeClaim:
+                claimName: pvc

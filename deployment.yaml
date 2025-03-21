@@ -16,7 +16,7 @@ spec:
       - name: cognifin-app
         image: cognifin_v1
         imagePullPolicy: Never  # Tell Kubernetes not to pull from a registry
-        # image: vikash95/kubernetes-test-app:latest
+        # image: cognifin_v1:latest
         resources:
            limits:
             memory: "512Mi"

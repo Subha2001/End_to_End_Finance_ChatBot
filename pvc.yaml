@@ -1,0 +1,12 @@
+# Description: This file contains the Persistent Volume Claim (PVC) definition.
+# The PVC is used by the Deployment to request storage from the cluster. [Currently, not in use]
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

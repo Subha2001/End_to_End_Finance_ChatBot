@@ -1,0 +1,89 @@
+# Purpose: Create a PersistentVolumeClaim (PVC) for audio files.
+# This PVC will request storage from the underlying infrastructure.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc  # Name of the PVC, referenced in the Deployment.
+spec:
+  accessModes:
+    - ReadWriteOnce  # Access mode: the volume can be mounted as read-write by a single node.
+                      # This is compatible with Azure Managed Disks.
+  resources:
+    requests:
+      storage: 10Gi  # Request 10 gigabytes of storage.
+                      # Adjust the size according to your needs.
+---
+# Purpose: Deploy the application with a persistent volume for audio files.
+# This Deployment will create and manage Pods running your application.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cognifin-v1  # Name of the Deployment.
+spec:
+  replicas: 2  # Number of desired Pod replicas.
+  selector:
+    matchLabels:
+      app: cognifin-app  # Select Pods with the label "app: cognifin-app".
+  template:
+    metadata:
+      labels:
+        app: cognifin-app  # Label applied to the Pods created by this Deployment.
+    spec:
+      initContainers:
+      - name: fix-permissions  # Init container to set permissions on the volume.
+        image: busybox  # Uses the busybox image for simple commands.
+        command: ["sh", "-c", "chmod -R 777 /app/media"]  # Sets read, write, and execute permissions recursively.
+        volumeMounts:
+        - name: media-storage  # Mounts the persistent volume.
+          mountPath: /app/media  # Mount path inside the container.
+      containers:
+      - name: cognifin-app  # Main application container.
+        image: subha2001/financechat:latest  # Your application image.
+        resources:
+          limits:
+            memory: "512Mi"  # Memory limit for the container.
+            cpu: "500m"  # CPU limit for the container.
+          requests:
+            memory: "256Mi"  # Memory request for the container.
+            cpu: "250m"  # CPU request for the container.
+        ports:
+        - containerPort: 5000  # Port your application listens on.
+        env:
+        - name: AUDIO_OUTPUT_PATH  # Environment variable for audio output path.
+          value: "/app/media"  # Path inside the container where audio files are saved.
+        - name: DEBUG_MODE  # Environment variable for debug mode.
+          value: "true"  # Enables debug mode (if supported by your application).
+        volumeMounts:
+        - name: media-storage  # Mounts the persistent volume.
+          mountPath: /app/media  # Mount path inside the container.
+        livenessProbe:  # Checks if the container is running.
+          httpGet:
+            path: /  # Path to check.
+            port: 5000  # Port to check.
+          initialDelaySeconds: 60  # Delay before the first probe.
+          periodSeconds: 30  # Interval between probes.
+        readinessProbe: # Checks if the container is ready to serve traffic.
+          httpGet:
+            path: /  # Path to check.
+            port: 5000  # Port to check.
+          initialDelaySeconds: 30  # Delay before the first probe.
+          periodSeconds: 10  # Interval between probes.
+      volumes:
+      - name: media-storage  # Defines the persistent volume.
+        persistentVolumeClaim:
+          claimName: media-pvc  # Refers to the PersistentVolumeClaim defined above.
+---
+# Purpose: Expose the application to the internet using a LoadBalancer Service.
+# This Service makes your application accessible from outside the Kubernetes cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: cognifin-service  # Name of the Service.
+spec:
+  selector:
+    app: cognifin-app  # Select Pods with the label "app: cognifin-app".
+  type: LoadBalancer  # Creates an external load balancer.
+  ports:
+    - protocol: TCP
+      port: 80  # Port exposed externally.
+      targetPort: 5000  # Port the application listens on inside the Pod.
