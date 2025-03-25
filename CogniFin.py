@@ -27,7 +27,7 @@ except ImportError as e:
     st.error(f"Error importing Hugging Face speech_to_text module: {e}")
 
 # --- Fixed Title ---
-st.title("Chatbot Application")
+st.title(" Cognitive Finance Chatbot")
 
 # --- Initialize conversation history ---
 if "chat_history" not in st.session_state:
@@ -53,8 +53,8 @@ app_choice = st.sidebar.selectbox("Choose an option", ["App FAQ", "Fin Bot"])
 
 # --- Chat interface for App FAQ ---
 if app_choice == "App FAQ":
-    st.header("App FAQ Chatbot")
-    user_query = st.text_input("Enter your question for App FAQ:")
+    st.header("ICICI Direct FAQ Chatbot")
+    user_query = st.text_input("Enter your question for ICICI Direct App FAQ:")
     if st.button("Submit", key="faq_submit"):
         if user_query.strip():
             # Append user's query to the conversation history
@@ -85,7 +85,7 @@ if app_choice == "App FAQ":
 # --- Chat interface for Fin Bot ---
 elif app_choice == "Fin Bot":
     st.header("Fin Bot")
-    user_query = st.text_input("Enter your query for Fin Bot:")
+    user_query = st.text_input("Enter your Financial Queary:")
     if st.button("Submit", key="finbot_submit"):
         if user_query.strip():
             # Append user's query to the conversation history
