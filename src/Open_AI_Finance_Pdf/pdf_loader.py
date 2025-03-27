@@ -2,7 +2,7 @@ from PyPDF2 import PdfReader
 
 def load_pdf_with_pypdf2():
     """Loads text from a fixed PDF document using PyPDF2."""
-    file_path = "/app/data/ICICI-direct-FAQ.pdf"  # file path based on Docker
+    file_path = "C:\End_to_End_Finance_ChatBot\data\ICICI-direct-FAQ.pdf"  # file path based on Docker
     try:
         with open(file_path, 'rb') as file:
             reader = PdfReader(file)
