@@ -6,4 +6,4 @@
 **Workflow Point 2**:
 - **Deployment**: Established a scalable deployment architecture utilizing Docker, local Kubernetes, and Azure Kubernetes Services (AKS). Implemented proactive monitoring through Prometheus and Grafana to ensure system reliability and performance.
 
-Tech Stack: Generative AI (GenAI), LLM Operations (LLMOps), Retrieval-Augmented Generation (RAG), FAISS Vector Store, Hugging-Face Model Integration, Docker Containerization, Kubernetes Orchestration, Azure Kubernetes Service (AKS) Deployment, Prometheus Monitoring, Grafana Visualization
+**Tech Stack**: Generative AI (GenAI), LLM Operations (LLMOps), Retrieval-Augmented Generation (RAG), FAISS Vector Store, Hugging-Face Model Integration, Docker Containerization, Kubernetes Orchestration, Azure Kubernetes Service (AKS) Deployment, Prometheus Monitoring, Grafana Visualization
